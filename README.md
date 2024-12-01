@@ -14,7 +14,7 @@ CyberSecurity in IoT | Time2Fix | Internet of Things (IoT) | Common Vulnerabilit
 
 
 **The Datasets**  
-Our dataset was created by collecting vulnerability information on IoT devices from four sources: MITRE\footnote{https://cve.mitre.org/}, NIST NVD\footnote{https://nvd.nist.gov/}, VulDB\footnote{https://vuldb.com/}, and Twitter\footnote{https://twitter.com}. MITRE provided information about common vulnerabilities and exposures (CVE) and their corresponding release dates. NIST delivers additional data to each CVE, such as the common vulnerability risk score (CVSS) and the common weaknesses enumeration (CWE). VulDB was used to obtain extensive information on the vulnerability (CVE), including risk scores (CVSS), exploits, attacks, weaknesses (CWEs), remediation actions, and dates corresponding to each element. Lastly, Twitter was used to identify social network trends related to each published vulnerability identifier (CVEID) and extracted only the trend counts provided by the platform. Table 1 provides a detailed breakdown of the features we extracted from each source.
+Our dataset was created by collecting vulnerability information on IoT devices from four sources: [MITRE](https://cve.mitre.org/), [NIST NVD](https://nvd.nist.gov/), [VulDB](https://vuldb.com/), and [Twitter](https://twitter.com). MITRE provided information about common vulnerabilities and exposures (CVE) and their corresponding release dates. NIST delivers additional data to each CVE, such as the common vulnerability risk score (CVSS) and the common weaknesses enumeration (CWE). VulDB was used to obtain extensive information on the vulnerability (CVE), including risk scores (CVSS), exploits, attacks, weaknesses (CWEs), remediation actions, and dates corresponding to each element. Lastly, Twitter was used to identify social network trends related to each published vulnerability identifier (CVEID) and extracted only the trend counts provided by the platform. Table 1 provides a detailed breakdown of the features we extracted from each source.
 
 We used the MITRE and NIST vulnerabilities databases (NIST NVD) to gather vulnerabilities. We filtered out records not related to hardware by identifying the type of affected product using the product code in the NVD (\textit{o} for operating system, \textit{s} for software, \textit{a} for application, and \textit{h} for hardware). We utilised the publication date of CVE as a reference to determine the Time-2-Fix for each vulnerability. However, we came across numerous records that resulted in a zero Time-2-Fix. This indicates that the date of the fix being published is the same as that of CVE. There could be various reasons behind this, and one of the most common reasons we found is the manufacturer's strategy, which involves publishing CVEs only after developing the fix. Due to this biased process, we conducted an in-depth analysis of the CVE data. We discovered that NVD labels the references attached to each CVE, and we found it convenient that one of the labels refers to PATCH (Vendor Advisory, Patch, Third Party Advisory). After developing Java code scripts, the dataset underwent filtration procedures, with the intention of retaining only those records that were accurately labelled as PATCH. 
 
@@ -22,97 +22,53 @@ To accurately gauge the length of Time-2-Fix, we thoroughly investigated the ref
 
 Upon compiling all pertinent information, our final dataset consisted of 1,027 records. These records encompass many aspects, including vulnerabilities, exploits, remediation actions, risk levels, timelines, and Twitter trends regarding IoT devices. We thoroughly analysed this dataset to identify the optimal model for implementation. In the next section, we delve deeper into the chosen machine learning model, which accurately predicts Time-2-Fix.
 
-Searching for possible sources, we used the dataset from [Rivera et al.](https://doi.org/10.1007/978-3-030-94822-1\_7) and added technical information (from Zoomeye) to form our dataset-0 (Table-1). Analysing this dataset, we found two problems; First, the information is organised in features rather than just text; Secondly, the classes predicted are risk labels(Low, Medium, High, Critical). 
 
 **Table 1. Dataset-0 features.**
-
-Description of features of dataset from [Rivera et al.](https://doi.org/10.1007/978-3-030-94822-1\_7)(SRC-1), ZoomEye (RC-2) and The NVD (SRC-3)
+Breakdown of the features provided by each source: MITRE (SRC-1), NIST (RC-2), VulDB (SRC-3), and Twitter (SRC-4).
 |Source |Feature Name |Data Type |Unique Values|Details|
 | --- | --- | --- | --- | --- |
-| SRC-1 | CVEID | Continuous            |  1,022 (21-02/2023)     | Vulnerability identifier.| 
-| --- | --- | --- | --- | --- |
-| SRC-2 | CVSS |  Categorical            |  100           | A real number range 0 to 10.| 
-| --- | --- | --- | --- | --- |
-| SRC-2 | Weakness ID (CWEID) |  Categorical |  926     | Weakness identifier| 
-| --- | --- | --- | --- | --- |
+| SRC-1 | CVEID | Continuous              |  1,022 (21-02/2023)     | Vulnerability identifier.| 
+| SRC-2 | CVSS |  Categorical             |  100           | A real number range 0 to 10.| 
+| SRC-2 | Weakness ID (CWEID) |Categorical|  926     | Weakness identifier| 
 | SRC-3 | Title |  Categorical            |  885     | Vulnerability Title.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Summary |  Categorical          |  271     | Vulnerability Summary.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Affected |  Categorical         |  871     | Affected products description.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Vulnerability |  Categorical    |  73     | Vulnerability details identifier.
-| --- | --- | --- | --- | --- |
 | SRC-3 | Impact |  Categorical           |  19     | Attack impact.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Exploit |  Categorical          |  91     | Exploit description.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Countermeasure |  Categorical   |  194     | Suggested countermeasure description.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Sources |  Categorical          |  735     | Data sources description.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Vendor |  Categorical           |  77     | Vendor name of affected product.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Product Name |  Categorical     |  333     | Name of affected product.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Component |  Categorical        |  360     | Name of affected component.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Version |  Categorical          |  392     | Affected product version.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Risk |  Categorical             |  3     | Vulnerability Risk (Low, Medium, High).| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Class |  Categorical            |  72     | Vulnerability Class Name.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Attck |  Categorical            |  21     | Attck Identifier from MITRE Att&ck.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | CVE Assigned | Date             |  235  | Date of the CVE assignment.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | VulDB Base Score | Categorical  |  100     | CVSSv3 Base Score calculation by VulDB.| 
-| --- | --- | --- | --- | --- |
 | SRC-3| Vulnerability Found| Date        |  144     | Timestamp for reported vulnerability found.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Advisory Disclosed| Date        |  326     | Timestamp for reported vulnerability Disclosed by Advisory.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | CVE Reserved |  Date            |  235     | Timestamp CVE Reserved.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | NVD Disclosed |  Date           |  215     | Timestamp of Vulnerability Disclosure by NVD.| 
-| --- | --- | --- | --- | --- |
 | SRC-3| VulDB Entry Created| Date        |  171     | Timestamp of Vulnerability Entry Creation by VulDB.| 
-| --- | --- | --- | --- | --- |
 | SRC-3| VulDB Entry Updated | Date       |  1022     | Timestamp of Vulnerability Entry Last Updated by VulDB.| 
-| --- | --- | --- | --- | --- |
 | SRC-3| Advisory Confirmation| Date      |  3     | Advisory Confirmation Type (Confirmed, Not Defined, Uncorroborated.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Exploit Publicity |  Categorical|  3     | Publicity of the exploit (Public, Private, NA).| 
-| --- | --- | --- | --- | --- |
 | SRC-3| Exploit Availability| Categorical|  3     | Availability of Exploit (1=Yes, 0=No, NA).| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Price 0day |  Categorical       |  4     | Known or Estimated 0-day Price of the Exploit.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Price Today |  Categorical      |  4     | Known or Estimated Price of the Exploit as of Today (Daily Updated).| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | EPSS Score |  Categorical       |  536     | Current Value of the Exploit Prediction Scoring System.| 
-| --- | --- | --- | --- | --- |
-| SRC-3 | EPSS Percentile |  Categorical |  653     | Percentile of CVE within Current EPSS.| 
-| --- | --- | --- | --- | --- |
+| SRC-3 | EPSS Percentile |  Categorical  |  653     | Percentile of CVE within Current EPSS.| 
 | SRC-3| Countermeasure| Categorical      |  4     | Generic Remediation Level Description.| 
-| --- | --- | --- | --- | --- |
 | SRC-3| Countermeasure Name| Categorical |  8     | Name of the Suggested Countermeasure.| 
-| --- | --- | --- | --- | --- |
 | SRC-3 | Upgrade Version |  Categorical  |  132     | First Known Unaffected Version(s).| 
-| --- | --- | --- | --- | --- |
 | SRC-4 | Tweets |  Categorical           |  54     | Tweet Count of a CVE.| 
-| --- | --- | --- | --- | --- |
 | SRC-4 | First Tweet Date |  Date        |  165     | Timestamp of the First Tweet.| 
-| --- | --- | --- | --- | --- |
 | SRC-4 | Retweet Count |  Categorical    |  44     | Retweets Average.| 
-| --- | --- | --- | --- | --- |
 | SRC-4 | Reply Count |  Categorical      |  21     | Reply-Count Average.| 
-| --- | --- | --- | --- | --- |
 | SRC-4 | Like Count |  Categorical       |  47     | Like-Count Average.| 
-| --- | --- | --- | --- | --- |
 | SRC-4 | Quote Count |  Categorical      |  19     | Quote-Count Average.| 
-| --- | --- | --- | --- | --- |
 | SRC-4 | Impression Count |  Categorical |  18     | Impression-Count Average.| 
 
 
