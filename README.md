@@ -2,7 +2,7 @@
 # Time2Fix Prediction Dataset
 
 **Authors**  
-  Carlos A. Rivera A.(1), Xinzhang Chen, Arash Shaghaghi1(1), Gustavo Batista(1), and Salil S. Kanhere(1)  
+  Carlos A. Rivera A.(1), Xinzhang Chen(1), Arash Shaghaghi1(1), Gustavo Batista(1), and Salil S. Kanhere(1)  
    1. The University of New South Wales (UNSW) Sydney, Australia.  
   
   
@@ -72,7 +72,7 @@ Breakdown of the features provided by each source: MITRE (SRC-1), NIST (RC-2), V
 | SRC-4 | Impression Count |  Categorical |  18     | Impression-Count Average.| 
 
 
-The Time2Fix dataset can be found in the following [link](https://github.com/criveraalvarez/IoT_CWE-CAPEC_Dataset/blob/b6bbe4e3103faa70c610eda947a29cba90cad13c/Datasets/DS_V575.5.csv).
+The Time2Fix dataset can be found in the following [link](https://github.com/criveraalvarez/Time2FixPredictionDS/blob/d09732f25a0af5fabf46323e779902a0b72ca28c/Time2Fix_DS_V1.xlsx).
 
 **Datasets inquiries**
 Please submit any inquiry related to the dataset to:
