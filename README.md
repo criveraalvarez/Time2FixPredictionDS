@@ -72,4 +72,10 @@ Breakdown of the features provided by each source: MITRE (SRC-1), NIST (RC-2), V
 | SRC-4 | Impression Count |  Categorical |  18     | Impression-Count Average.| 
 
 
+The Time2Fix dataset can be found in the following [link](https://github.com/criveraalvarez/IoT_CWE-CAPEC_Dataset/blob/b6bbe4e3103faa70c610eda947a29cba90cad13c/Datasets/DS_V575.5.csv).
 
+**Datasets inquiries**
+Please submit any inquiry related to the dataset to:
+- [Dr. Carlos Rivera - UNSW](mailto:c.rivera_alvarez@unswalumni.com),
+- [Dr. Arash Shaghaghi - UNSW](mailto:a.shaghaghi@unsw.edu.au), 
+- [Professor Salil Kanhere - UNSW](mailto:salil.kanhere@unsw.edu.au)
